@@ -2,10 +2,13 @@ package org.example.model;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.Observable;
 
 public class Model extends Observable {
     private MyShape currentShape;
+
+    private List<MyShape> shapeList;
 
     public void setMyShape(MyShape myShape) {
         this.currentShape = myShape;
@@ -19,5 +22,10 @@ public class Model extends Observable {
 
     public void draw(Graphics2D g) {
         currentShape.draw(g);
+    }
+
+    public void createCurrentShape(MyShape shape) {
+        currentShape = shape;
+        shapeList.add(currentShape);
     }
 }

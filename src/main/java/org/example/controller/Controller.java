@@ -38,7 +38,7 @@ public class Controller {
         model.changeShape(firstPoint, secondPoint);
     }
 
-    public static Controller getInstance() {
+    public synchronized static Controller getInstance() {
         if (instance==null) {
             instance = new Controller();
         }
@@ -48,4 +48,5 @@ public class Controller {
     public void draw(Graphics2D g2) {
         model.draw(g2);
     }
+
 }

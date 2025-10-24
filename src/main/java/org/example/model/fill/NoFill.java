@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.RectangularShape;
 
-public class NoFill implements FillBehavior {
+public class NoFill implements FillBehavior, Cloneable {
     private Color color;
     private RectangularShape shape;
 
@@ -28,5 +28,13 @@ public class NoFill implements FillBehavior {
     @Override
     public void setShape(RectangularShape s) {
         shape = s;
+    }
+
+    @Override
+    public NoFill clone() {
+        NoFill clone = new NoFill();
+        clone.setColor(color);
+        clone.setShape(shape);
+        return clone;
     }
 }
