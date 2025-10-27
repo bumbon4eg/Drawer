@@ -1,10 +1,14 @@
 package org.example.controller;
 
+import org.example.controller.action.ActionDraw;
 import org.example.model.Model;
 import org.example.model.MyShape;
-import org.example.model.fill.NoFill;
+import org.example.model.shape.factory.MyShapeFactory;
+import org.example.model.shape.factory.MyShapeType;
+import org.example.model.shape.fill.NoFill;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
+import org.w3c.dom.events.MouseEvent;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -17,11 +21,14 @@ public class Controller {
     private final MyPanel panel;
     private Point2D firstPoint;
     private Point2D secondPoint;
+
     private Controller() {
         model = new Model();
-        MyShape shape = new MyShape(new Rectangle2D.Double());
+        MyShape shape = MyShapeFactory.createShape(MyShapeType.RECTANGLE2D, Color.BLUE, true);
         shape.setFb(new NoFill());
         model.setMyShape(shape);
+
+        ActionDraw drawer = new ActionDraw(shape, model);
 
         panel = new MyPanel(this);
         // TODO: Поменять наблюдатель на более современную реализацию
@@ -47,6 +54,14 @@ public class Controller {
 
     public void draw(Graphics2D g2) {
         model.draw(g2);
+    }
+
+    public void mousePressed(MouseEvent arg0) {
+        //TODO:сделать обработку события с вызовом stretchShape();
+    }
+
+    public void mouseDragged(MouseEvent arg0) {
+        //TODO:сделать обработку события с вызовом createShape();
     }
 
 }

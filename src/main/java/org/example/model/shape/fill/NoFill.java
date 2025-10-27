@@ -1,13 +1,18 @@
-package org.example.model.fill;
+package org.example.model.shape.fill;
+
+import org.example.model.MyShape;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.RectangularShape;
-public class Fill implements FillBehavior, Cloneable {
 
+public class NoFill implements FillBehavior, Cloneable {
     private Color color;
-    private RectangularShape shape;
+    private MyShape shape;
+
+    public NoFill() {
+    }
 
     @Override
     public void setColor(Color color) {
@@ -18,21 +23,20 @@ public class Fill implements FillBehavior, Cloneable {
     public void draw(Graphics2D g) {
         Paint paint = g.getPaint();
         g.setPaint(color);
-        g.fill(shape);
+        g.draw(shape);
         g.setPaint(paint);
     }
 
     @Override
-    public void setShape(RectangularShape s) {
+    public void setShape(MyShape s) {
         shape = s;
     }
 
     @Override
-    public Fill clone() {
-        Fill clone = new Fill();
+    public NoFill clone() {
+        NoFill clone = new NoFill();
         clone.setColor(color);
         clone.setShape(shape);
         return clone;
     }
-
 }

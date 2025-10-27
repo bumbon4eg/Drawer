@@ -1,7 +1,7 @@
 package org.example.model;
 
-import org.example.model.fill.Fill;
-import org.example.model.fill.FillBehavior;
+import org.example.model.shape.fill.Fill;
+import org.example.model.shape.fill.FillBehavior;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,10 +11,10 @@ import java.awt.geom.RectangularShape;
 
 public class MyShape implements Cloneable {
     private final Color color;
-    private RectangularShape shape;
+    private MyShape shape;
     private FillBehavior fb;
 
-    public MyShape(RectangularShape shape) {
+    public MyShape(MyShape shape) {
         this.shape = shape;
         color = Color.GRAY;
         fb = new Fill();
@@ -25,14 +25,14 @@ public class MyShape implements Cloneable {
     // TODO: Попробовать вызовы через разные конструкторы, затем переделать создание через фабрику
     public MyShape() {
         color = Color.BLUE;
-        shape = new Rectangle2D.Double();
+        shape = new MyShape(new Rectangle2D.Double());
         fb = new Fill();
         fb.setColor(color);
         fb.setShape(shape);
     }
 
     // TODO: Попробовать вызовы через разные конструкторы, затем переделать создание через фабрику
-    public MyShape(Color color, RectangularShape shape, FillBehavior fb) {
+    public MyShape(Color color, MyShape shape, FillBehavior fb) {
         this.color = color;
         this.shape = shape;
         this.fb = fb;
@@ -46,7 +46,7 @@ public class MyShape implements Cloneable {
         fb.setColor(color);
     }
 
-    public void setShape(RectangularShape shape) {
+    public void setShape(MyShape shape) {
         this.shape = shape;
     }
 
@@ -54,13 +54,16 @@ public class MyShape implements Cloneable {
         shape.setFrameFromDiagonal(x, y);
     }
 
+    private void setFrameFromDiagonal(Point2D x, Point2D y) {
+        ((RectangularShape) shape).setFrameFromDiagonal(x, y);
+    }
+
     void draw(Graphics2D g) {
         fb.draw(g);
-
     }
 
     @Override
     public MyShape clone() {
-        return new MyShape(color, (RectangularShape) shape.clone(), fb.clone());
+        return new MyShape(color,  shape.clone(), fb.clone());
     }
 }
