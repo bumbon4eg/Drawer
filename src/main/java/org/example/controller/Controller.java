@@ -21,7 +21,7 @@ public class Controller {
     private final MyPanel panel;
     private Point2D firstPoint;
     private Point2D secondPoint;
-    private ActionDraw actionDraw;
+    private final ActionDraw actionDraw;
     private Controller() {
         model = new Model();
         MyShape shape = MyShapeFactory.createShape(Color.BLACK, new Fill(), ShapeType.RECTANGULAR);
@@ -55,11 +55,11 @@ public class Controller {
         model.draw(g2);
     }
 
-    public void mousePressed() {
-        actionDraw.stretchShape((Point) firstPoint);
+    public void mousePressed(Point firstPoint) {
+        actionDraw.stretchShape(firstPoint);
     }
-    public void mouseDragged() {
-        actionDraw.createShape((Point) secondPoint);
+    public void mouseDragged(Point secondPoint) {
+        actionDraw.createShape(secondPoint);
     }
 
 }
