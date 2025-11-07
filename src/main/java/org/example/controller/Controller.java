@@ -56,10 +56,10 @@ public class Controller {
     }
 
     public void mousePressed(Point firstPoint) {
-        actionDraw.stretchShape(firstPoint);
+        actionDraw.createShape(firstPoint);
     }
     public void mouseDragged(Point secondPoint) {
-        actionDraw.createShape(secondPoint);
+        actionDraw.stretchShape(secondPoint);
     }
 
 }
