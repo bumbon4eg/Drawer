@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.MenuController;
 import org.example.controller.action.ActionDraw;
 import org.example.model.Model;
 import org.example.model.MyShape;
@@ -10,6 +11,7 @@ import org.example.model.shape.factory.ShapeType;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -24,17 +26,20 @@ public class Controller {
     private final ActionDraw actionDraw;
     private Controller() {
         model = new Model();
+        panel = new MyPanel(this);
+        model.addObserver(panel);
+
+        frame = new MyFrame();
+        frame.setPanel(panel);
+        frame.setJMenuBar(MenuController.getInstance().getMenuBar());
+
         MyShape shape = MyShapeFactory.createShape(Color.BLACK, new Fill(), ShapeType.RECTANGULAR);
         model.setMyShape(shape);
 
         actionDraw = new ActionDraw(shape, model);
 
-        panel = new MyPanel(this);
         // TODO: Поменять наблюдатель на более современную реализацию
-        model.addObserver(panel);
 
-        frame = new MyFrame();
-        frame.setPanel(panel);
     }
     public void getPointOne(Point2D p){
         firstPoint = p;

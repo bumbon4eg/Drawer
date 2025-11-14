@@ -9,7 +9,7 @@ import java.util.Observable;
 public class Model extends Observable {
     private MyShape currentShape;
 
-    private List<MyShape> shapeList = new ArrayList<>();
+    private final List<MyShape> shapeList = new ArrayList<>();
 
     public void setMyShape(MyShape myShape) {
         this.currentShape = myShape;

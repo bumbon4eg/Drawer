@@ -10,15 +10,16 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class ActionDraw {
-    private MyShape sampleShape = MyShapeFactory.createShape(Color.BLACK, new Fill(), ShapeType.RECTANGULAR);;
+    private MyShape sampleShape;
     private MyShape shape;
     private Point2D firstPoint;
     private Point2D secondPoint;
-    private Model model;
+    private final Model model;
 
     public ActionDraw(MyShape shape, Model model) {
         this.model = model;
         this.shape = shape;
+        this.sampleShape = shape;
     }
 
     public void stretchShape(Point point) {
