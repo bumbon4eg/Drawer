@@ -56,7 +56,6 @@ public class MyShape implements Cloneable {
 
     void draw(Graphics2D g) {
         fb.draw(g);
-
     }
 
     @Override

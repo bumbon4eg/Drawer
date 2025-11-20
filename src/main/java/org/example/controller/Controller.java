@@ -29,20 +29,17 @@ public class Controller {
         frame.setPanel(panel);
         frame.setJMenuBar(MenuController.getInstance().getMenuBar());
 
-        MyShape shape = MyShapeFactory.createShape(Color.BLACK, new Fill(), ShapeType.RECTANGULAR);
-        model.setMyShape(shape);
+        updateShapeFromMenu();
 
-        actionDraw = new ActionDraw(shape, model);
+        actionDraw = new ActionDraw(model);
 
         // TODO: Поменять наблюдатель на более современную реализацию
 
     }
-    public void getPointOne(Point2D p){
-        firstPoint = p;
-    }
-    public void getPointTwo(Point2D p){
-        secondPoint = p;
-        model.changeShape(firstPoint, secondPoint);
+
+    public void updateShapeFromMenu() {
+        MyShape shape = MenuController.getInstance().getSelectedShape();
+        model.setMyShape(shape);
     }
 
     public synchronized static Controller getInstance() {
@@ -57,6 +54,7 @@ public class Controller {
     }
 
     public void mousePressed(Point firstPoint) {
+        updateShapeFromMenu();
         actionDraw.createShape(firstPoint);
     }
     public void mouseDragged(Point secondPoint) {

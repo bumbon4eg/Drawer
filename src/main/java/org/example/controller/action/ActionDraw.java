@@ -1,5 +1,6 @@
 package org.example.controller.action;
 
+import org.example.controller.MenuController;
 import org.example.model.Model;
 import org.example.model.MyShape;
 import org.example.model.shape.Fill;
@@ -10,25 +11,35 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class ActionDraw {
-    private MyShape sampleShape;
-    private MyShape shape;
+
     private Point2D firstPoint;
     private Point2D secondPoint;
     private final Model model;
+    private MyShape currentShape;
+    private MyShape sampleShape;
 
-    public ActionDraw(MyShape shape, Model model) {
+    public ActionDraw(Model model) {
         this.model = model;
-        this.shape = shape;
-        this.sampleShape = shape;
+
+        updateSampleShapeFromMenu();
     }
 
     public void stretchShape(Point point) {
-        firstPoint = point;
-        shape.setFrame(firstPoint,secondPoint);
+        secondPoint = point;
+        model.changeShape(firstPoint,secondPoint,currentShape);
     }
     public void createShape(Point point) {
+        firstPoint = point;
         secondPoint = point;
-        shape = sampleShape.clone();
-        model.createCurrentShape(shape);
+
+        updateSampleShapeFromMenu();
+
+        currentShape = sampleShape.clone();
+        currentShape.setFrame(firstPoint, secondPoint);
+        model.createCurrentShape(currentShape);
+    }
+
+    private void updateSampleShapeFromMenu() {
+        sampleShape = MenuController.getInstance().getSelectedShape();
     }
 }

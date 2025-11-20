@@ -69,17 +69,17 @@ public class MenuController {
         group.add(red);
 
         JRadioButtonMenuItem blue = new JRadioButtonMenuItem("Синий");
-        red.addActionListener(e -> selectedColor = Color.BLUE);
+        blue.addActionListener(e -> selectedColor = Color.BLUE);
         colorMenu.add(blue);
         group.add(blue);
 
         JRadioButtonMenuItem green = new JRadioButtonMenuItem("Зелёный");
-        red.addActionListener(e -> selectedColor = Color.GREEN);
+        green.addActionListener(e -> selectedColor = Color.GREEN);
         colorMenu.add(green);
         group.add(green);
 
         JRadioButtonMenuItem black = new JRadioButtonMenuItem("Чёрный");
-        red.addActionListener(e -> selectedColor = Color.BLACK);
+        black.addActionListener(e -> selectedColor = Color.BLACK);
         colorMenu.add(black);
         group.add(black);
 
@@ -96,7 +96,7 @@ public class MenuController {
         group.add(fill);
 
         JRadioButtonMenuItem noFill = new JRadioButtonMenuItem("Не заливать");
-        fill.addActionListener(e -> selectedFill = new NoFill());
+        noFill.addActionListener(e -> selectedFill = new NoFill());
         fillMenu.add(noFill);
         group.add(noFill);
 
@@ -105,5 +105,21 @@ public class MenuController {
 
     public JMenuBar getMenuBar() {
         return menu;
+    }
+
+    public ShapeType getSelectedShapeType() {
+        return selectedShape;
+    }
+
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
+
+    public FillBehavior getSelectedFill() {
+        return selectedFill;
+    }
+
+    public MyShape getSelectedShape() {
+        return MyShapeFactory.createShape(selectedColor, selectedFill, selectedShape);
     }
 }
