@@ -1,20 +1,16 @@
 package org.example.controller;
 
-import org.example.MenuController;
 import org.example.controller.action.ActionDraw;
 import org.example.model.Model;
 import org.example.model.MyShape;
-import org.example.model.fill.NoFill;
 import org.example.model.shape.Fill;
 import org.example.model.shape.factory.MyShapeFactory;
 import org.example.model.shape.factory.ShapeType;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 public class Controller {
     private static Controller instance;
