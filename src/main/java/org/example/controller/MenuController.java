@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.controller.action.ActionDraw;
+import org.example.model.Model;
 import org.example.model.MyShape;
 import org.example.model.fill.FillBehavior;
 import org.example.model.fill.NoFill;
@@ -14,11 +15,10 @@ import java.awt.*;
 public class MenuController {
     private static MenuController instance;
     private final JMenuBar menu;
-    private ShapeType selectedShape;
-    private Color selectedColor;
-    private FillBehavior selectedFill;
+    private static MenuState state;
 
-    public static synchronized MenuController getInstance() {
+    public static synchronized MenuController getInstance(Model model) {
+        state = new MenuState(model);
         if (instance==null) {
             instance = new MenuController();
         }
@@ -26,10 +26,6 @@ public class MenuController {
     }
 
     private MenuController() {
-        selectedShape = ShapeType.RECTANGULAR;
-        selectedColor = Color.BLACK;
-        selectedFill = new NoFill();
-
         menu = new JMenuBar();
 
         JMenu colorMenu = createColorMenu();
@@ -47,12 +43,12 @@ public class MenuController {
 
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem square = new JRadioButtonMenuItem("Прямоугольник");
-        square.addActionListener(e -> selectedShape = ShapeType.RECTANGULAR);
+        square.addActionListener(e -> state.setShapeType(ShapeType.RECTANGULAR));
         shapeMenu.add(square);
         group.add(square);
 
         JRadioButtonMenuItem ellipse = new JRadioButtonMenuItem("Эллипс");
-        ellipse.addActionListener(e -> selectedShape = ShapeType.ELLIPSE);
+        ellipse.addActionListener(e -> state.setShapeType(ShapeType.ELLIPSE));
         shapeMenu.add(ellipse);
         group.add(ellipse);
 
@@ -64,22 +60,22 @@ public class MenuController {
 
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem red = new JRadioButtonMenuItem("Красный");
-        red.addActionListener(e -> selectedColor = Color.RED);
+        red.addActionListener(e -> state.setColor(Color.RED));
         colorMenu.add(red);
         group.add(red);
 
         JRadioButtonMenuItem blue = new JRadioButtonMenuItem("Синий");
-        blue.addActionListener(e -> selectedColor = Color.BLUE);
+        blue.addActionListener(e -> state.setColor(Color.BLUE));
         colorMenu.add(blue);
         group.add(blue);
 
         JRadioButtonMenuItem green = new JRadioButtonMenuItem("Зелёный");
-        green.addActionListener(e -> selectedColor = Color.GREEN);
+        green.addActionListener(e -> state.setColor(Color.GREEN));
         colorMenu.add(green);
         group.add(green);
 
         JRadioButtonMenuItem black = new JRadioButtonMenuItem("Чёрный");
-        black.addActionListener(e -> selectedColor = Color.BLACK);
+        black.addActionListener(e -> state.setColor(Color.BLACK));
         colorMenu.add(black);
         group.add(black);
 
@@ -91,16 +87,20 @@ public class MenuController {
 
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem fill = new JRadioButtonMenuItem("Заливать");
-        fill.addActionListener(e -> selectedFill = new Fill());
+        fill.addActionListener(e -> state.setFill(true));
         fillMenu.add(fill);
         group.add(fill);
 
         JRadioButtonMenuItem noFill = new JRadioButtonMenuItem("Не заливать");
-        noFill.addActionListener(e -> selectedFill = new NoFill());
+        noFill.addActionListener(e -> state.setFill(false));
         fillMenu.add(noFill);
         group.add(noFill);
 
         return fillMenu;
+    }
+
+    public static ActionDraw getActionDraw() {
+        return state.getActionDraw();
     }
 
     public JMenuBar getMenuBar() {
@@ -108,18 +108,18 @@ public class MenuController {
     }
 
     public ShapeType getSelectedShapeType() {
-        return selectedShape;
+        return state.getSelectedShapeType();
     }
 
     public Color getSelectedColor() {
-        return selectedColor;
+        return state.getSelectedColor();
     }
 
-    public FillBehavior getSelectedFill() {
-        return selectedFill;
+    public boolean getSelectedFill() {
+        return state.getSelectedFill();
     }
 
     public MyShape getSelectedShape() {
-        return MyShapeFactory.createShape(selectedColor, selectedFill, selectedShape);
+        return state.getSelectedShape();
     }
 }

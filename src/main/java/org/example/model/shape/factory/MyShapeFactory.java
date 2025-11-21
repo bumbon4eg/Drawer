@@ -6,6 +6,6 @@ import org.example.model.fill.FillBehavior;
 import java.awt.*;
 
 public class MyShapeFactory {
-    public static MyShape createShape(Color color, FillBehavior fb, ShapeType type){
+    public static MyShape createShape(Color color, boolean fb, ShapeType type){
         return type.createShape(color, fb);};
 }

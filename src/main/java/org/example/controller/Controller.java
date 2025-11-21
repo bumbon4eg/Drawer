@@ -9,6 +9,7 @@ import org.example.model.shape.factory.ShapeType;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -17,28 +18,27 @@ public class Controller {
     private final Model model;
     private final MyFrame frame;
     private final MyPanel panel;
-    private Point2D firstPoint;
-    private Point2D secondPoint;
     private final ActionDraw actionDraw;
+    private final MenuController menu;
     private Controller() {
         model = new Model();
-        panel = new MyPanel(this);
-        model.addObserver(panel);
-
         frame = new MyFrame();
-        frame.setPanel(panel);
-        frame.setJMenuBar(MenuController.getInstance().getMenuBar());
+
+        menu = MenuController.getInstance(model);
+        actionDraw = menu.getActionDraw();
+        frame.setJMenuBar(menu.getMenuBar());
 
         updateShapeFromMenu();
 
-        actionDraw = new ActionDraw(model);
+        panel = new MyPanel(actionDraw);
 
-        // TODO: Поменять наблюдатель на более современную реализацию
+        model.addObserver(panel);
+        frame.setPanel(panel);
 
     }
 
     public void updateShapeFromMenu() {
-        MyShape shape = MenuController.getInstance().getSelectedShape();
+        MyShape shape = menu.getSelectedShape();
         model.setMyShape(shape);
     }
 
@@ -47,18 +47,6 @@ public class Controller {
             instance = new Controller();
         }
         return instance;
-    }
-
-    public void draw(Graphics2D g2) {
-        model.draw(g2);
-    }
-
-    public void mousePressed(Point firstPoint) {
-        updateShapeFromMenu();
-        actionDraw.createShape(firstPoint);
-    }
-    public void mouseDragged(Point secondPoint) {
-        actionDraw.stretchShape(secondPoint);
     }
 
 }

@@ -10,7 +10,7 @@ import org.example.model.shape.factory.ShapeType;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class ActionDraw {
+public class ActionDraw implements AppAction{
 
     private Point2D firstPoint;
     private Point2D secondPoint;
@@ -40,6 +40,20 @@ public class ActionDraw {
     }
 
     private void updateSampleShapeFromMenu() {
-        sampleShape = MenuController.getInstance().getSelectedShape();
+        sampleShape = MenuController.getInstance(model).getSelectedShape();
+    }
+
+    @Override
+    public void mousePressed(Point point) {
+        createShape(point);
+    }
+
+    @Override
+    public void mouseDragged(Point point) {
+        stretchShape(point);
+    }
+
+    public void draw(Graphics2D g2) {
+        model.draw(g2);
     }
 }
