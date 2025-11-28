@@ -1,5 +1,6 @@
 package org.example.model;
 
+import lombok.Getter;
 import org.example.model.shape.Fill;
 import org.example.model.fill.FillBehavior;
 
@@ -11,6 +12,7 @@ import java.awt.geom.RectangularShape;
 
 public class MyShape implements Cloneable {
     private final Color color;
+    @Getter
     private RectangularShape shape;
     private FillBehavior fb;
 

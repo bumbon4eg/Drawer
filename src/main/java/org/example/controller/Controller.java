@@ -1,8 +1,7 @@
 package org.example.controller;
 
-import org.example.controller.action.ActionDraw;
+import org.example.controller.action.AppAction;
 import org.example.model.Model;
-import org.example.model.MyShape;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
 
@@ -13,19 +12,19 @@ public class Controller {
     private final Model model;
     private final MyFrame frame;
     private final MyPanel panel;
-    private final ActionDraw actionDraw;
+    private final AppAction action;
     private final MenuController menu;
     private Controller() {
         model = new Model();
         frame = new MyFrame();
 
         menu = MenuController.getInstance(model);
-        actionDraw = menu.getActionDraw();
+        action = menu.getActionDraw();
         frame.setJMenuBar(menu.getMenuBar());
 
         updateShapeFromMenu();
 
-        panel = new MyPanel(actionDraw, this);
+        panel = new MyPanel(action, this);
 
         model.addObserver(panel);
         frame.setPanel(panel);
@@ -35,8 +34,7 @@ public class Controller {
     }
 
     public void updateShapeFromMenu() {
-        MyShape shape = menu.getSelectedShape();
-        model.setMyShape(shape);
+        model.setMyShape(menu.getSelectedShape());
     }
 
     public synchronized static Controller getInstance() {

@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 
 public class MyPanel extends JPanel implements Observer {
     private final AppAction action;
-
     private final Controller controller;
 
     public MyPanel(AppAction action, Controller controller) {

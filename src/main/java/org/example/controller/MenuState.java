@@ -17,7 +17,6 @@ public class MenuState {
     private boolean fill;
     private Color color;
     private ShapeType shapeType;
-
     private AppAction action;
 
     public MenuState(Model model) {
@@ -25,9 +24,5 @@ public class MenuState {
         color = Color.BLACK;
         shapeType = ShapeType.RECTANGULAR;
         action = new ActionDraw(model);
-    }
-
-    public MyShape getSelectedShape() {
-        return MyShapeFactory.createShape(color, fill, shapeType);
     }
 }

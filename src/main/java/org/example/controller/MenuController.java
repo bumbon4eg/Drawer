@@ -1,16 +1,15 @@
 package org.example.controller;
 
 import org.example.controller.action.ActionDraw;
+import org.example.controller.action.AppAction;
 import org.example.model.Model;
 import org.example.model.MyShape;
-import org.example.model.fill.FillBehavior;
-import org.example.model.fill.NoFill;
-import org.example.model.shape.Fill;
-import org.example.model.shape.factory.MyShapeFactory;
 import org.example.model.shape.factory.ShapeType;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.example.model.shape.factory.MyShapeFactory.createShape;
 
 public class MenuController {
     private static MenuController instance;
@@ -99,8 +98,8 @@ public class MenuController {
         return fillMenu;
     }
 
-    public static ActionDraw getActionDraw() {
-        return (ActionDraw) state.getAction();
+    public static AppAction getActionDraw() {
+        return state.getAction();
     }
 
     public JMenuBar getMenuBar() {
@@ -108,6 +107,6 @@ public class MenuController {
     }
 
     public MyShape getSelectedShape() {
-        return state.getSelectedShape();
+        return createShape(state);
     }
 }
