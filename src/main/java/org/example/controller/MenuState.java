@@ -16,10 +16,10 @@ public class MenuState {
     private ActionDraw actionDraw;
 
     public MenuState(Model model) {
-        actionDraw = new ActionDraw(model);
         fill = true;
         color = Color.BLACK;
         shapeType = ShapeType.RECTANGULAR;
+        actionDraw = new ActionDraw(model);
     }
 
     public ShapeType getSelectedShapeType() {

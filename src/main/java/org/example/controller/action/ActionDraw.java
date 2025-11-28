@@ -21,7 +21,7 @@ public class ActionDraw implements AppAction{
     public ActionDraw(Model model) {
         this.model = model;
 
-        updateSampleShapeFromMenu();
+        //updateSampleShapeFromMenu();
     }
 
     public void stretchShape(Point point) {

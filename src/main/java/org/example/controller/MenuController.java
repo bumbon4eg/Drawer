@@ -18,9 +18,9 @@ public class MenuController {
     private static MenuState state;
 
     public static synchronized MenuController getInstance(Model model) {
-        state = new MenuState(model);
         if (instance==null) {
             instance = new MenuController();
+            state = new MenuState(model);
         }
         return instance;
     }
