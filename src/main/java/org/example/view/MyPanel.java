@@ -1,7 +1,7 @@
 package org.example.view;
 
 import org.example.controller.Controller;
-import org.example.controller.action.ActionDraw;
+import org.example.controller.action.AppAction;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,20 +14,23 @@ import javax.swing.JPanel;
 
 
 public class MyPanel extends JPanel implements Observer {
-    private final ActionDraw actionDraw;
+    private final AppAction action;
 
-    public MyPanel(ActionDraw actionDraw) {
-        this.actionDraw = actionDraw;
+    private final Controller controller;
+
+    public MyPanel(AppAction action, Controller controller) {
+        this.action = action;
+        this.controller = controller;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent arg0) {
-                actionDraw.mousePressed(arg0.getPoint());
+                action.mousePressed(arg0.getPoint());
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent arg0) {
-                actionDraw.mouseDragged(arg0.getPoint());
+                action.mouseDragged(arg0.getPoint());
                 repaint();
             }
         });
@@ -37,7 +40,7 @@ public class MyPanel extends JPanel implements Observer {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        actionDraw.draw(g2);
+        controller.draw(g2);
     }
 
     @Override

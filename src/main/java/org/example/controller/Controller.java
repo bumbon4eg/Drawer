@@ -3,15 +3,10 @@ package org.example.controller;
 import org.example.controller.action.ActionDraw;
 import org.example.model.Model;
 import org.example.model.MyShape;
-import org.example.model.shape.Fill;
-import org.example.model.shape.factory.MyShapeFactory;
-import org.example.model.shape.factory.ShapeType;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 public class Controller {
     private static Controller instance;
@@ -30,10 +25,12 @@ public class Controller {
 
         updateShapeFromMenu();
 
-        panel = new MyPanel(actionDraw);
+        panel = new MyPanel(actionDraw, this);
 
         model.addObserver(panel);
         frame.setPanel(panel);
+
+        frame.revalidate();
 
     }
 
@@ -49,4 +46,7 @@ public class Controller {
         return instance;
     }
 
+    public void draw(Graphics2D g2) {
+        model.draw(g2);
+    }
 }

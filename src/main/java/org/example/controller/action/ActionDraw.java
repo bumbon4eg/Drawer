@@ -3,9 +3,7 @@ package org.example.controller.action;
 import org.example.controller.MenuController;
 import org.example.model.Model;
 import org.example.model.MyShape;
-import org.example.model.shape.Fill;
 import org.example.model.shape.factory.MyShapeFactory;
-import org.example.model.shape.factory.ShapeType;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -20,8 +18,6 @@ public class ActionDraw implements AppAction{
 
     public ActionDraw(Model model) {
         this.model = model;
-
-        //updateSampleShapeFromMenu();
     }
 
     public void stretchShape(Point point) {
@@ -44,16 +40,11 @@ public class ActionDraw implements AppAction{
     }
 
     @Override
-    public void mousePressed(Point point) {
-        createShape(point);
-    }
+    public void mousePressed(Point point) { createShape(point); }
 
     @Override
     public void mouseDragged(Point point) {
         stretchShape(point);
     }
 
-    public void draw(Graphics2D g2) {
-        model.draw(g2);
-    }
 }

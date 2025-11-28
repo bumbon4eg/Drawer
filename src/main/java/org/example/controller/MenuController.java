@@ -100,23 +100,11 @@ public class MenuController {
     }
 
     public static ActionDraw getActionDraw() {
-        return state.getActionDraw();
+        return (ActionDraw) state.getAction();
     }
 
     public JMenuBar getMenuBar() {
         return menu;
-    }
-
-    public ShapeType getSelectedShapeType() {
-        return state.getSelectedShapeType();
-    }
-
-    public Color getSelectedColor() {
-        return state.getSelectedColor();
-    }
-
-    public boolean getSelectedFill() {
-        return state.getSelectedFill();
     }
 
     public MyShape getSelectedShape() {

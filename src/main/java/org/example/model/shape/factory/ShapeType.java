@@ -1,7 +1,6 @@
 package org.example.model.shape.factory;
 
 import org.example.model.MyShape;
-import org.example.model.fill.FillBehavior;
 import org.example.model.fill.NoFill;
 import org.example.model.shape.Fill;
 
