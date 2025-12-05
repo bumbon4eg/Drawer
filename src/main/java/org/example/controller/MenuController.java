@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import org.example.controller.action.ActionDraw;
 import org.example.controller.action.AppAction;
 import org.example.model.Model;
 import org.example.model.MyShape;
@@ -30,11 +29,12 @@ public class MenuController {
         JMenu colorMenu = createColorMenu();
         JMenu shapeMenu = createShapeMenu();
         JMenu fillMenu = createFillMenu();
+        JMenu actionMenu = createActionMenu();
 
         menu.add(colorMenu);
         menu.add(shapeMenu);
         menu.add(fillMenu);
-
+        menu.add(actionMenu);
     }
 
     private JMenu createShapeMenu() {
@@ -98,7 +98,24 @@ public class MenuController {
         return fillMenu;
     }
 
-    public static AppAction getActionDraw() {
+    private JMenu createActionMenu() {
+        JMenu actionMenu = new JMenu("Действие");
+
+        ButtonGroup group = new ButtonGroup();
+        JRadioButtonMenuItem draw = new JRadioButtonMenuItem("Создать");
+        draw.addActionListener(e -> state.setAction(true));
+        actionMenu.add(draw);
+        group.add(draw);
+
+        JRadioButtonMenuItem move = new JRadioButtonMenuItem("Двигать");
+        move.addActionListener(e -> state.setAction(false));
+        actionMenu.add(move);
+        group.add(move);
+
+        return actionMenu;
+    }
+
+    public static AppAction getAction() {
         return state.getAction();
     }
 

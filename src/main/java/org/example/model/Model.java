@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.Getter;
+import org.example.view.MyPanel;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -33,5 +34,9 @@ public class Model extends Observable {
     public void createCurrentShape(MyShape shape) {
         currentShape = shape;
         shapeList.add(currentShape);
+    }
+
+    public void update() {
+        notifyObservers();
     }
 }

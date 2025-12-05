@@ -14,22 +14,20 @@ import javax.swing.JPanel;
 
 
 public class MyPanel extends JPanel implements Observer {
-    private final AppAction action;
     private final Controller controller;
 
-    public MyPanel(AppAction action, Controller controller) {
-        this.action = action;
+    public MyPanel(Controller controller) {
         this.controller = controller;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent arg0) {
-                action.mousePressed(arg0.getPoint());
+                controller.getAction().mousePressed(arg0.getPoint());
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent arg0) {
-                action.mouseDragged(arg0.getPoint());
+                controller.getAction().mouseDragged(arg0.getPoint());
                 repaint();
             }
         });

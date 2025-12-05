@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.Getter;
 import org.example.controller.action.AppAction;
 import org.example.model.Model;
 import org.example.view.MyFrame;
@@ -12,19 +13,20 @@ public class Controller {
     private final Model model;
     private final MyFrame frame;
     private final MyPanel panel;
-    private final AppAction action;
+    @Getter
+    private AppAction action;
     private final MenuController menu;
     private Controller() {
         model = new Model();
         frame = new MyFrame();
 
         menu = MenuController.getInstance(model);
-        action = menu.getActionDraw();
+        action = menu.getAction();
         frame.setJMenuBar(menu.getMenuBar());
 
         updateShapeFromMenu();
 
-        panel = new MyPanel(action, this);
+        panel = new MyPanel(this);
 
         model.addObserver(panel);
         frame.setPanel(panel);
@@ -45,6 +47,7 @@ public class Controller {
     }
 
     public void draw(Graphics2D g2) {
+        action = menu.getAction();
         model.draw(g2);
     }
 }

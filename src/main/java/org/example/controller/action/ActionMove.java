@@ -17,6 +17,7 @@ public class ActionMove implements AppAction {
     }
 
     private void searchShape(Point point) {
+        firstPoint = point;
         shape = model.getShapeList()
                 .stream()
                 .filter(myShape -> myShape.getShape().contains(point))
@@ -25,7 +26,22 @@ public class ActionMove implements AppAction {
     }
 
     private void move(Point point) {
-        //TODO:Реализовать вычисление смещения фигуры
+        secondPoint = point;
+        if (shape == null){
+            return;
+        }
+        double deltaX = secondPoint.getX() - firstPoint.getX();
+        double deltaY = secondPoint.getY() - firstPoint.getY();
+        Point2D newShapeFirstPoint = new Point2D.Double();
+        newShapeFirstPoint.setLocation(shape.getShape().getMaxX() + deltaX,
+                shape.getShape().getMaxY() + deltaY);
+        Point2D newShapeSecondPoint = new Point2D.Double();
+        newShapeSecondPoint.setLocation(shape.getShape().getMinX() + deltaX,
+                shape.getShape().getMinY() + deltaY);
+        shape.getShape().setFrameFromDiagonal(newShapeFirstPoint,
+                newShapeSecondPoint);
+        firstPoint = point;
+        model.update();
     }
 
     @Override

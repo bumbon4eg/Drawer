@@ -1,7 +1,7 @@
 package org.example.model;
 
 import lombok.Getter;
-import org.example.model.shape.Fill;
+import org.example.model.fill.Fill;
 import org.example.model.fill.FillBehavior;
 
 import java.awt.Color;
