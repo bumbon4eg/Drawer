@@ -115,7 +115,7 @@ public class MenuController {
         return actionMenu;
     }
 
-    public static AppAction getAction() {
+    public AppAction getAction() {
         return state.getAction();
     }
 
