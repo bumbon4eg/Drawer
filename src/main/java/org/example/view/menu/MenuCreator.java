@@ -1,29 +1,38 @@
-package org.example.controller;
+package org.example.view.menu;
 
-import org.example.controller.action.AppAction;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.controller.MenuState;
+import org.example.controller.action.ActionDraw;
+import org.example.controller.action.ActionMove;
 import org.example.model.Model;
 import org.example.model.MyShape;
 import org.example.model.shape.factory.ShapeType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
+import java.util.ArrayList;
 
 import static org.example.model.shape.factory.MyShapeFactory.createShape;
 
-public class MenuController {
-    private static MenuController instance;
+public class MenuCreator {
+    private static MenuCreator instance;
+    @Getter
     private final JMenuBar menu;
-    private static MenuState state;
+    @Setter
+    private Model model;
+    @Setter
+    private MenuState state;
 
-    public static synchronized MenuController getInstance(Model model) {
+    public static synchronized MenuCreator getInstance() {
         if (instance==null) {
-            instance = new MenuController();
-            state = new MenuState(model);
+            instance = new MenuCreator();
         }
         return instance;
     }
 
-    private MenuController() {
+    private MenuCreator() {
         menu = new JMenuBar();
 
         JMenu colorMenu = createColorMenu();
@@ -103,27 +112,40 @@ public class MenuController {
 
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem draw = new JRadioButtonMenuItem("Создать");
-        draw.addActionListener(e -> state.setAction(true));
+        draw.addActionListener(new CommandActionListener(new SwitchAction(new ActionDraw(model), state))); //TODO: сделать также везде
         actionMenu.add(draw);
         group.add(draw);
 
         JRadioButtonMenuItem move = new JRadioButtonMenuItem("Двигать");
-        move.addActionListener(e -> state.setAction(false));
+        move.addActionListener(e -> state.setAction(new ActionMove(model)));
         actionMenu.add(move);
         group.add(move);
 
         return actionMenu;
     }
 
-    public AppAction getAction() {
-        return state.getAction();
-    }
-
-    public JMenuBar getMenuBar() {
-        return menu;
-    }
-
     public MyShape getSelectedShape() {
         return createShape(state);
+    }
+
+    public JToolBar createToolBar() {
+        ArrayList<Action> subMenuItems = createToolBarItems();
+        JToolBar jToolBar = new JToolBar();
+
+        subMenuItems.forEach(jToolBar::add);
+
+        return jToolBar;
+    }
+
+    private ArrayList<Action> createToolBarItems() {
+        ArrayList<Action> menuItems = new ArrayList<>();
+
+        URL colorUrl = getClass().getClassLoader().getResource("ico/color.png");
+        ImageIcon colorIco = colorUrl == null ? null : new ImageIcon(colorUrl);
+        JRadioButton rgbButton = new JRadioButton();
+        AppCommand colorCommand = new SwitchColor(state, false, null, rgbButton);
+        menuItems.add(new CommandActionListener("Цвет", colorIco, colorCommand));
+
+        return menuItems;
     }
 }

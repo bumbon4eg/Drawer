@@ -1,6 +1,6 @@
 package org.example.controller.action;
 
-import org.example.controller.MenuController;
+import org.example.view.menu.MenuCreator;
 import org.example.model.Model;
 import org.example.model.MyShape;
 
@@ -26,7 +26,7 @@ public class ActionDraw implements AppAction {
         firstPoint = point;
         secondPoint = point;
 
-        currentShape = MenuController.getInstance(model).getSelectedShape().clone();
+        currentShape = MenuCreator.getInstance().getSelectedShape().clone();
         currentShape.setFrame(firstPoint, secondPoint);
         model.createCurrentShape(currentShape);
     }

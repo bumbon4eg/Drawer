@@ -3,7 +3,6 @@ package org.example.controller;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.action.ActionDraw;
-import org.example.controller.action.ActionMove;
 import org.example.controller.action.AppAction;
 import org.example.model.Model;
 import org.example.model.shape.factory.ShapeType;
@@ -25,9 +24,5 @@ public class MenuState {
         color = Color.BLACK;
         shapeType = ShapeType.RECTANGULAR;
         action = new ActionDraw(this.model);
-    }
-
-    public void setAction(boolean act) {
-        this.action = act ? new ActionDraw(model) : new ActionMove(model);
     }
 }

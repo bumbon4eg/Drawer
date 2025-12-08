@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.example.model.fill.Fill;
 import org.example.model.fill.FillBehavior;
 
@@ -12,28 +13,12 @@ import java.awt.geom.RectangularShape;
 
 public class MyShape implements Cloneable {
     private final Color color;
+    @Setter
     @Getter
     private RectangularShape shape;
     private FillBehavior fb;
 
-    public MyShape(RectangularShape shape) {
-        this.shape = shape;
-        color = Color.GRAY;
-        fb = new Fill();
-        fb.setColor(color);
-        fb.setShape(shape);
-    }
 
-    // TODO: Попробовать вызовы через разные конструкторы, затем переделать создание через фабрику
-    public MyShape() {
-        color = Color.BLUE;
-        shape = new Rectangle2D.Double();
-        fb = new Fill();
-        fb.setColor(color);
-        fb.setShape(shape);
-    }
-
-    // TODO: Попробовать вызовы через разные конструкторы, затем переделать создание через фабрику
     public MyShape(Color color, RectangularShape shape, FillBehavior fb) {
         this.color = color;
         this.shape = shape;
@@ -46,10 +31,6 @@ public class MyShape implements Cloneable {
         this.fb = fb;
         fb.setShape(shape);
         fb.setColor(color);
-    }
-
-    public void setShape(RectangularShape shape) {
-        this.shape = shape;
     }
 
     public void setFrame(Point2D x, Point2D y) {

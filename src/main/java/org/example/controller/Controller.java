@@ -5,6 +5,7 @@ import org.example.controller.action.AppAction;
 import org.example.model.Model;
 import org.example.view.MyFrame;
 import org.example.view.MyPanel;
+import org.example.view.menu.MenuCreator;
 
 import java.awt.*;
 
@@ -15,14 +16,20 @@ public class Controller {
     private final MyPanel panel;
     @Getter
     private AppAction action;
-    private final MenuController menu;
+    private final MenuCreator menu;
+    private final MenuState state;
+
     private Controller() {
         model = new Model();
         frame = new MyFrame();
+        state = new MenuState(model);
 
-        menu = MenuController.getInstance(model);
-        action = menu.getAction();
-        frame.setJMenuBar(menu.getMenuBar());
+        menu = MenuCreator.getInstance();
+        menu.setState(state);
+        menu.setModel(model);
+        frame.setJMenuBar(menu.getMenu());
+
+        action = state.getAction();
 
         updateShapeFromMenu();
 
@@ -30,9 +37,9 @@ public class Controller {
 
         model.addObserver(panel);
         frame.setPanel(panel);
+        frame.add(menu.createToolBar(), BorderLayout.NORTH);
 
         frame.revalidate();
-
     }
 
     public void updateShapeFromMenu() {
@@ -47,7 +54,7 @@ public class Controller {
     }
 
     public void draw(Graphics2D g2) {
-        action = menu.getAction();
+        action = state.getAction();
         model.draw(g2);
     }
 }
