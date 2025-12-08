@@ -6,10 +6,8 @@
 package org.example.view;
 
 import javax.swing.JFrame;
-import java.awt.*;
 
 public class MyFrame extends JFrame {
-    private MyPanel panel;
 
     public MyFrame() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -18,7 +16,6 @@ public class MyFrame extends JFrame {
     }
 
     public void setPanel(MyPanel panel) {
-        this.panel = panel;
         add(panel);
     }
 

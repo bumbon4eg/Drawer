@@ -24,27 +24,22 @@ public class Controller {
         frame = new MyFrame();
         state = new MenuState(model);
 
+        panel = new MyPanel(this);
+        model.addObserver(panel);
+        frame.setPanel(panel);
+
         menu = MenuCreator.getInstance();
         menu.setState(state);
         menu.setModel(model);
-        frame.setJMenuBar(menu.getMenu());
+
+        frame.setJMenuBar(menu.createMenuBar());
+        frame.add(menu.createToolBar(), BorderLayout.WEST);
 
         action = state.getAction();
-
-        updateShapeFromMenu();
-
-        panel = new MyPanel(this);
-
-        model.addObserver(panel);
-        frame.setPanel(panel);
-        frame.add(menu.createToolBar(), BorderLayout.NORTH);
 
         frame.revalidate();
     }
 
-    public void updateShapeFromMenu() {
-        model.setMyShape(menu.getSelectedShape());
-    }
 
     public synchronized static Controller getInstance() {
         if (instance==null) {
@@ -54,7 +49,11 @@ public class Controller {
     }
 
     public void draw(Graphics2D g2) {
-        action = state.getAction();
+        updateAction();
         model.draw(g2);
+    }
+
+    public void updateAction() {
+        action = state.getAction();
     }
 }

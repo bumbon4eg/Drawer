@@ -1,7 +1,7 @@
 package org.example.model;
 
 import lombok.Getter;
-import org.example.view.MyPanel;
+import lombok.Setter;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -9,16 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+@Getter
 public class Model extends Observable {
+    @Setter
     private MyShape currentShape;
-    @Getter
     private final List<MyShape> shapeList = new ArrayList<>();
-    public void setMyShape(MyShape myShape) {
-        this.currentShape = myShape;
-    }
 
-    public void changeShape(Point2D x, Point2D y, MyShape currentShape) {
-        this.currentShape = currentShape;
+    public void changeShape(Point2D x, Point2D y) {
         this.currentShape.setFrame(x, y);
         this.setChanged();
         this.notifyObservers();

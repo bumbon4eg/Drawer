@@ -12,7 +12,6 @@ public class ActionDraw implements AppAction {
     private Point2D firstPoint;
     private Point2D secondPoint;
     private final Model model;
-    private MyShape currentShape;
 
     public ActionDraw(Model model) {
         this.model = model;
@@ -20,23 +19,29 @@ public class ActionDraw implements AppAction {
 
     public void stretchShape(Point point) {
         secondPoint = point;
-        model.changeShape(firstPoint,secondPoint,currentShape);
+
+        MyShape currentShape = model.getCurrentShape();
+        if (currentShape == null) {
+            createShape(point);
+        } else {
+            model.changeShape(firstPoint, secondPoint);
+        }
     }
+
     public void createShape(Point point) {
         firstPoint = point;
         secondPoint = point;
 
-        currentShape = MenuCreator.getInstance().getSelectedShape().clone();
-        currentShape.setFrame(firstPoint, secondPoint);
-        model.createCurrentShape(currentShape);
+        MyShape newShape = MenuCreator.getInstance().getSelectedShape().clone();
+        newShape.setFrame(firstPoint, secondPoint);
+
+        model.createCurrentShape(newShape);
+        model.update();
     }
 
     @Override
     public void mousePressed(Point point) { createShape(point); }
 
     @Override
-    public void mouseDragged(Point point) {
-        stretchShape(point);
-    }
-
+    public void mouseDragged(Point point) { stretchShape(point); }
 }
