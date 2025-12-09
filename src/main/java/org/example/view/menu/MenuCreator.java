@@ -1,15 +1,15 @@
 package org.example.view.menu;
 
 import lombok.Setter;
+import org.example.controller.Controller;
 import org.example.controller.MenuState;
-import org.example.controller.action.ActionDraw;
-import org.example.controller.action.ActionMove;
+import org.example.controller.actions.ActionDraw;
+import org.example.controller.actions.ActionMove;
 import org.example.model.Model;
 import org.example.model.MyShape;
 import org.example.model.shape.factory.ShapeType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -17,6 +17,8 @@ import static org.example.model.shape.factory.MyShapeFactory.createShape;
 
 public class MenuCreator {
     private static MenuCreator instance;
+    @Setter
+    private Controller controller;
     private final JMenuBar menu;
     @Setter
     private Model model;
@@ -85,10 +87,6 @@ public class MenuCreator {
         return actionMenu;
     }
 
-    public MyShape getSelectedShape() {
-        return createShape(state);
-    }
-
     public JToolBar createToolBar() {
         ArrayList<Action> subMenuItems = createToolBarItems();
         JToolBar jToolBar = new JToolBar(JToolBar.VERTICAL);
@@ -137,6 +135,20 @@ public class MenuCreator {
         AppCommand ellipseCommand = new SwitchShape(ShapeType.ELLIPSE, state);
         menuItems.add(new CommandActionListener("Эллипс", ellipseIco, ellipseCommand));
 
+        URL undoUrl = getClass().getClassLoader().getResource("ico/undo_16x16.png");
+        ImageIcon undoIco = undoUrl == null ? null : new ImageIcon(undoUrl);
+        AppCommand undoCommand = new SwitchUndo(controller.getUndoMachine());
+        CommandActionListener undoListener = new CommandActionListener("Убрать", undoIco, undoCommand);
+        controller.getUndoMachine().setUndoActionListener(undoListener);
+        menuItems.add(undoListener);
+
+        URL redoUrl = getClass().getClassLoader().getResource("ico/redo_16x16.png");
+        ImageIcon redoIco = redoUrl == null ? null : new ImageIcon(redoUrl);
+        AppCommand redoCommand = new SwitchRedo(controller.getUndoMachine());
+        CommandActionListener redoListener = new CommandActionListener("Вернуть", redoIco, redoCommand);
+        controller.getUndoMachine().setRedoActionListener(redoListener);
+        menuItems.add(redoListener);
+
         return menuItems;
     }
 
@@ -150,5 +162,9 @@ public class MenuCreator {
         menu.add(actionMenu);
 
         return menu;
+    }
+
+    public MyShape getSelectedShape() {
+        return createShape(state);
     }
 }

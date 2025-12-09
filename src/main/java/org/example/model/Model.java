@@ -28,12 +28,19 @@ public class Model extends Observable {
         }
     }
 
-    public void createCurrentShape(MyShape shape) {
+    public void addShape(MyShape shape) {
         currentShape = shape;
         shapeList.add(currentShape);
     }
 
     public void update() {
         notifyObservers();
+    }
+
+    public MyShape pop() {
+        MyShape shape = shapeList.get(shapeList.size()-1);
+        shapeList.remove(shapeList.size()-1);
+        update();
+        return shape;
     }
 }

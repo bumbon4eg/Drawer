@@ -2,8 +2,8 @@ package org.example.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.controller.action.ActionDraw;
-import org.example.controller.action.AppAction;
+import org.example.controller.actions.ActionDraw;
+import org.example.controller.actions.AppAction;
 import org.example.model.Model;
 import org.example.model.shape.factory.ShapeType;
 

@@ -2,7 +2,7 @@ package org.example.view.menu;
 
 import lombok.AllArgsConstructor;
 import org.example.controller.MenuState;
-import org.example.controller.action.AppAction;
+import org.example.controller.actions.AppAction;
 
 @AllArgsConstructor
 public class SwitchAction implements AppCommand{
