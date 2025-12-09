@@ -8,12 +8,12 @@ import java.awt.geom.Point2D;
 
 public class ActionMove implements AppAction {
     private Point2D firstPoint;
-    private Point2D secondPoint;
     private final Model model;
-    private MyShape shape;
-    private MyShape drawableShape;
-    private double originalX, originalY;
-    private double width, height;
+    private int shapeIndex = -1;
+    private Model.ModelSnapshot beforeState;
+    private Model.ModelSnapshot afterState;
+    private boolean isNewAction = true;
+    private boolean isDragging = false;
 
     public ActionMove(Model model) {
         this.model = model;
@@ -21,40 +21,43 @@ public class ActionMove implements AppAction {
 
     private void searchShape(Point point) {
         firstPoint = point;
-        shape = model.getShapeList()
-                .stream()
-                .filter(myShape -> myShape.getShape().contains(point))
-                .findFirst()
-                .orElse(null);
+        var shapes = model.getShapeList();
 
-        if (shape != null) {
-            originalX = shape.getShape().getX();
-            originalY = shape.getShape().getY();
-            width = shape.getShape().getWidth();
-            height = shape.getShape().getHeight();
+        for (int i = shapes.size() - 1; i >= 0; i--) {
+            MyShape shape = shapes.get(i);
+            if (shape.getShape().contains(point)) {
+                shapeIndex = i;
+
+                if (isNewAction) {
+                    beforeState = model.saveSnapshot();
+                    isNewAction = false;
+                    isDragging = true;
+                }
+                break;
+            }
         }
     }
 
     private void move(Point point) {
-        secondPoint = point;
-
-        if (shape == null){
+        if (shapeIndex < 0|| !isDragging) {
             return;
         }
 
-        double deltaX = secondPoint.getX() - firstPoint.getX();
-        double deltaY = secondPoint.getY() - firstPoint.getY();
-        Point2D newShapeFirstPoint = new Point2D.Double();
-        newShapeFirstPoint.setLocation(shape.getShape().getMaxX() + deltaX,
-                shape.getShape().getMaxY() + deltaY);
-        Point2D newShapeSecondPoint = new Point2D.Double();
-        newShapeSecondPoint.setLocation(shape.getShape().getMinX() + deltaX,
-                shape.getShape().getMinY() + deltaY);
-        shape.getShape().setFrameFromDiagonal(newShapeFirstPoint,
-                newShapeSecondPoint);
+        MyShape shape = model.getShapeList().get(shapeIndex);
+
+        double deltaX = point.getX() - firstPoint.getX();
+        double deltaY = point.getY() - firstPoint.getY();
+
+        double x = shape.getShape().getX();
+        double y = shape.getShape().getY();
+        double width = shape.getShape().getWidth();
+        double height = shape.getShape().getHeight();
+
+        shape.getShape().setFrame(x + deltaX, y + deltaY, width, height);
+
         firstPoint = point;
 
-        drawableShape = shape.clone();
+        afterState = model.saveSnapshot();
 
         model.update();
     }
@@ -71,71 +74,28 @@ public class ActionMove implements AppAction {
 
     @Override
     public void execute() {
-        if (drawableShape != null) {
-            MyShape shapeToMove = model.getShapeList().stream()
-                    .filter(s -> s.equals(shape) ||
-                            (s.getShape().getX() == originalX &&
-                                    s.getShape().getY() == originalY))
-                    .findFirst()
-                    .orElse(null);
-
-            if (shapeToMove != null) {
-                double deltaX = drawableShape.getShape().getX() - originalX;
-                double deltaY = drawableShape.getShape().getY() - originalY;
-
-                shapeToMove.getShape().setFrame(
-                        originalX + deltaX,
-                        originalY + deltaY,
-                        width,
-                        height
-                );
-
-                shape = shapeToMove;
-                drawableShape = shapeToMove.clone();
-            }
+        if (afterState != null) {
+            model.restoreSnapshot(afterState);
             model.update();
         }
     }
 
     @Override
     public void unexecute() {
-        if (drawableShape != null) {
-            MyShape shapeToReset = model.getShapeList().stream()
-                    .filter(s -> s.equals(drawableShape) ||
-                            (Math.abs(s.getShape().getX() - drawableShape.getShape().getX()) < 0.1 &&
-                                    Math.abs(s.getShape().getY() - drawableShape.getShape().getY()) < 0.1))
-                    .findFirst()
-                    .orElse(null);
-
-            if (shapeToReset != null) {
-                shapeToReset.getShape().setFrame(
-                        originalX,
-                        originalY,
-                        width,
-                        height
-                );
-
-                shape = shapeToReset;
-                drawableShape = shapeToReset.clone();
-            }
+        if (beforeState != null) {
+            model.restoreSnapshot(beforeState);
             model.update();
         }
     }
 
     @Override
     public AppAction cloneAction() {
-        ActionMove actionMove = new ActionMove(model);
-
-        actionMove.firstPoint = firstPoint == null ? null : (Point2D) firstPoint.clone();
-        actionMove.secondPoint = secondPoint == null ? null : (Point2D) secondPoint.clone();
-        actionMove.shape = shape == null ? null : shape.clone();
-        actionMove.drawableShape = drawableShape == null ? null : drawableShape.clone();
-
-        actionMove.originalX = originalX;
-        actionMove.originalY = originalY;
-        actionMove.width = width;
-        actionMove.height = height;
-
-        return actionMove;
+        ActionMove clone = new ActionMove(model);
+        clone.firstPoint = firstPoint != null ? (Point2D) firstPoint.clone() : null;
+        clone.beforeState = beforeState;
+        clone.afterState = afterState;
+        clone.isNewAction = false;
+        clone.isDragging = isDragging;
+        return clone;
     }
 }

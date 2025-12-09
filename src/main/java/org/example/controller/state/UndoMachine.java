@@ -17,6 +17,7 @@ public class UndoMachine {
         LinkedList<AppAction> undoList = new LinkedList<>();
         LinkedList<AppAction> redoList = new LinkedList<>();
         undoRedoState = new StateDisableUndoDisableRedo(undoList, redoList);
+        updateButtons();
     }
 
     public void executeRedo() {
@@ -37,16 +38,40 @@ public class UndoMachine {
     }
 
     public void add(AppAction action) {
-        undoRedoState.clearHistory();
+        if (!undoRedoState.getRedoActivityList().isEmpty()) {
+            undoRedoState.clearHistory();
+        }
+
         undoRedoState.addAction(action);
 
-        undoRedoState = !undoRedoState.getUndoActivityList().isEmpty() ?
-                new StateEnableUndoDisableRedo(undoRedoState.getUndoActivityList(), undoRedoState.getRedoActivityList()) :
-                new StateDisableUndoDisableRedo(undoRedoState.getUndoActivityList(), undoRedoState.getRedoActivityList());
+        updateStateAfterAction();
+        updateButtons();
     }
 
     public void updateButtons() {
-        undoActionListener.setEnabled(isEnableUndo());
-        redoActionListener.setEnabled(isEnableRedo());
+        if (undoActionListener != null) {
+            undoActionListener.setEnabled(isEnableUndo());
+        }
+        if (redoActionListener != null) {
+            redoActionListener.setEnabled(isEnableRedo());
+        }
+    }
+
+    private void updateStateAfterAction() {
+        boolean canUndo = isEnableUndo();
+        boolean canRedo = isEnableRedo();
+
+        LinkedList<AppAction> undoList = undoRedoState.getUndoActivityList();
+        LinkedList<AppAction> redoList = undoRedoState.getRedoActivityList();
+
+        if (canUndo && canRedo) {
+            undoRedoState = new StateEnableUndoEnableRedo(undoList, redoList);
+        } else if (canUndo) {
+            undoRedoState = new StateEnableUndoDisableRedo(undoList, redoList);
+        } else if (canRedo) {
+            undoRedoState = new StateDisableUndoEnableRedo(undoList, redoList);
+        } else {
+            undoRedoState = new StateDisableUndoDisableRedo(undoList, redoList);
+        }
     }
 }

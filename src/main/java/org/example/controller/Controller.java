@@ -27,9 +27,9 @@ public class Controller {
         model = new Model();
         frame = new MyFrame();
         state = new MenuState(model);
+        panel = new MyPanel(this);
         undoMachine = new UndoMachine();
 
-        panel = new MyPanel(this);
         model.addObserver(panel);
         frame.setPanel(panel);
 
@@ -42,7 +42,7 @@ public class Controller {
         frame.add(menu.createToolBar(), BorderLayout.WEST);
 
         updateAction();
-
+        undoMachine.updateButtons();
         frame.revalidate();
     }
 
@@ -73,7 +73,6 @@ public class Controller {
     public void getPointTwo(Point2D p) {
         updateAction();
         action.mouseDragged((Point) p);
-        undoMachine.add(action.cloneAction());
         undoMachine.updateButtons();
     }
 }

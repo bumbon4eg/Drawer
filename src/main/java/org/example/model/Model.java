@@ -15,6 +15,35 @@ public class Model extends Observable {
     private MyShape currentShape;
     private final List<MyShape> shapeList = new ArrayList<>();
 
+    public ModelSnapshot saveSnapshot() {
+        return new ModelSnapshot(this);
+    }
+
+    public void restoreSnapshot(ModelSnapshot snapshot) {
+        this.shapeList.clear();
+        for (MyShape shape : snapshot.getShapes()) {
+            this.shapeList.add(shape.clone());
+        }
+        if (!this.shapeList.isEmpty()) {
+            this.currentShape = this.shapeList.get(this.shapeList.size() - 1);
+        } else {
+            this.currentShape = null;
+        }
+        update();
+    }
+
+    @Getter
+    public static class ModelSnapshot {
+        private final List<MyShape> shapes;
+
+        public ModelSnapshot(Model model) {
+            this.shapes = new ArrayList<>();
+            for (MyShape shape : model.getShapeList()) {
+                this.shapes.add(shape.clone());
+            }
+        }
+    }
+
     public void changeShape(Point2D x, Point2D y) {
         this.currentShape.setFrame(x, y);
         this.setChanged();
@@ -34,13 +63,7 @@ public class Model extends Observable {
     }
 
     public void update() {
+        setChanged();
         notifyObservers();
-    }
-
-    public MyShape pop() {
-        MyShape shape = shapeList.get(shapeList.size()-1);
-        shapeList.remove(shapeList.size()-1);
-        update();
-        return shape;
     }
 }
