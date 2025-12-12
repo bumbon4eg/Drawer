@@ -75,4 +75,9 @@ public class Controller {
         action.mouseDragged((Point) p);
         undoMachine.updateButtons();
     }
+
+    public void getPointThree(Point2D p) {
+        updateAction();
+        action.mouseReleased((Point) p);
+    }
 }

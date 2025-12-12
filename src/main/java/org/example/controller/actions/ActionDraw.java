@@ -54,17 +54,19 @@ public class ActionDraw implements AppAction {
 
     @Override
     public void mousePressed(Point point) {
-        isNewAction = true;
         createShape(point);
     }
 
     @Override
     public void mouseDragged(Point point) {
         stretchShape(point);
+    }
 
-        if (!isNewAction) {
-            afterState = model.saveSnapshot();
-        }
+    @Override
+    public void mouseReleased(Point point) {
+        isNewAction = true;
+        afterState = model.saveSnapshot();
+        model.update();
     }
 
     @Override

@@ -57,8 +57,6 @@ public class ActionMove implements AppAction {
 
         firstPoint = point;
 
-        afterState = model.saveSnapshot();
-
         model.update();
     }
 
@@ -70,6 +68,12 @@ public class ActionMove implements AppAction {
     @Override
     public void mouseDragged(Point point) {
         move(point);
+    }
+
+    @Override
+    public void mouseReleased(Point point) {
+        afterState = model.saveSnapshot();
+        model.update();
     }
 
     @Override
