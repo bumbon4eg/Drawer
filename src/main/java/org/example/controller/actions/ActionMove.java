@@ -5,59 +5,51 @@ import org.example.model.MyShape;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class ActionMove implements AppAction {
-    private Point2D firstPoint;
+    private double originalX, originalY;
+    private double finalX, finalY;
+    private Point2D dragOffset;
     private final Model model;
-    private int shapeIndex = -1;
-    private Model.ModelSnapshot beforeState;
-    private Model.ModelSnapshot afterState;
-    private boolean isNewAction = true;
-    private boolean isDragging = false;
+    private MyShape shape;
 
     public ActionMove(Model model) {
         this.model = model;
     }
 
     private void searchShape(Point point) {
-        firstPoint = point;
-        var shapes = model.getShapeList();
+        shape = find(point);
+        if (shape != null) {
+            Rectangle2D bounds = shape.getShape().getBounds2D();
+            originalX = bounds.getX();
+            originalY = bounds.getY();
 
-        for (int i = shapes.size() - 1; i >= 0; i--) {
-            MyShape shape = shapes.get(i);
-            if (shape.getShape().contains(point)) {
-                shapeIndex = i;
+            dragOffset = new Point2D.Double(point.x - originalX, point.y - originalY);
 
-                if (isNewAction) {
-                    beforeState = model.saveSnapshot();
-                    isNewAction = false;
-                    isDragging = true;
-                }
-                break;
-            }
+            model.setCurrentShape(shape);
+            model.update();
         }
     }
 
     private void move(Point point) {
-        if (shapeIndex < 0|| !isDragging) {
-            return;
-        }
+        if (shape == null || dragOffset == null) return;
 
-        MyShape shape = model.getShapeList().get(shapeIndex);
+        double newX = point.x - dragOffset.getX();
+        double newY = point.y - dragOffset.getY();
 
-        double deltaX = point.getX() - firstPoint.getX();
-        double deltaY = point.getY() - firstPoint.getY();
-
-        double x = shape.getShape().getX();
-        double y = shape.getShape().getY();
-        double width = shape.getShape().getWidth();
-        double height = shape.getShape().getHeight();
-
-        shape.getShape().setFrame(x + deltaX, y + deltaY, width, height);
-
-        firstPoint = point;
+        Rectangle2D bounds = shape.getShape().getBounds2D();
+        shape.getShape().setFrame(newX, newY, bounds.getWidth(), bounds.getHeight());
 
         model.update();
+    }
+
+    private MyShape find(Point2D point) {
+        return model.getShapeList()
+                .stream()
+                .filter(myShape -> myShape.getShape().contains(point))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -71,35 +63,44 @@ public class ActionMove implements AppAction {
     }
 
     @Override
-    public void mouseReleased(Point point) {
-        afterState = model.saveSnapshot();
-        model.update();
+    public void mouseReleased() {
+        if (shape != null) {
+            Rectangle2D bounds = shape.getShape().getBounds2D();
+            finalX = bounds.getX();
+            finalY = bounds.getY();
+        }
     }
 
     @Override
     public void execute() {
-        if (afterState != null) {
-            model.restoreSnapshot(afterState);
-            model.update();
-        }
+        model.setCurrentShape(shape);
+        Rectangle2D bounds = shape.getShape().getBounds2D();
+        shape.getShape().setFrame(finalX, finalY, bounds.getWidth(), bounds.getHeight());
+        model.update();
     }
 
     @Override
     public void unexecute() {
-        if (beforeState != null) {
-            model.restoreSnapshot(beforeState);
-            model.update();
-        }
+        model.setCurrentShape(shape);
+        Rectangle2D bounds = shape.getShape().getBounds2D();
+        shape.getShape().setFrame(originalX, originalY, bounds.getWidth(), bounds.getHeight());
+        model.update();
     }
 
     @Override
     public AppAction cloneAction() {
         ActionMove clone = new ActionMove(model);
-        clone.firstPoint = firstPoint != null ? (Point2D) firstPoint.clone() : null;
-        clone.beforeState = beforeState;
-        clone.afterState = afterState;
-        clone.isNewAction = false;
-        clone.isDragging = isDragging;
+        clone.shape = this.shape;
+        clone.originalX = this.originalX;
+        clone.originalY = this.originalY;
+        clone.finalX = this.finalX;
+        clone.finalY = this.finalY;
+        clone.dragOffset = this.dragOffset != null ? (Point2D) this.dragOffset.clone() : null;
         return clone;
+    }
+
+    @Override
+    public boolean hasShape() {
+        return shape!=null;
     }
 }

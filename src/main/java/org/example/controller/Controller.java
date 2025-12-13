@@ -55,7 +55,6 @@ public class Controller {
     }
 
     public void draw(Graphics2D g2) {
-        updateAction();
         model.draw(g2);
     }
 
@@ -66,18 +65,15 @@ public class Controller {
     public void getPointOne(Point2D p) {
         updateAction();
         action.mousePressed((Point) p);
-        undoMachine.add(action.cloneAction());
-        undoMachine.updateButtons();
     }
 
     public void getPointTwo(Point2D p) {
-        updateAction();
         action.mouseDragged((Point) p);
         undoMachine.updateButtons();
     }
 
-    public void getPointThree(Point2D p) {
-        updateAction();
-        action.mouseReleased((Point) p);
+    public void released() {
+        action.mouseReleased();
+        if (action.hasShape()) undoMachine.add(action.cloneAction());
     }
 }

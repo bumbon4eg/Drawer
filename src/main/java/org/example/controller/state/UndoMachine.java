@@ -58,20 +58,7 @@ public class UndoMachine {
     }
 
     private void updateStateAfterAction() {
-        boolean canUndo = isEnableUndo();
-        boolean canRedo = isEnableRedo();
-
-        LinkedList<AppAction> undoList = undoRedoState.getUndoActivityList();
-        LinkedList<AppAction> redoList = undoRedoState.getRedoActivityList();
-
-        if (canUndo && canRedo) {
-            undoRedoState = new StateEnableUndoEnableRedo(undoList, redoList);
-        } else if (canUndo) {
-            undoRedoState = new StateEnableUndoDisableRedo(undoList, redoList);
-        } else if (canRedo) {
-            undoRedoState = new StateDisableUndoEnableRedo(undoList, redoList);
-        } else {
-            undoRedoState = new StateDisableUndoDisableRedo(undoList, redoList);
-        }
+        undoRedoState = new StateEnableUndoDisableRedo(undoRedoState.getUndoActivityList(),
+                undoRedoState.getRedoActivityList());
     }
 }

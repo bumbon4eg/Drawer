@@ -15,55 +15,29 @@ public class Model extends Observable {
     private MyShape currentShape;
     private final List<MyShape> shapeList = new ArrayList<>();
 
-    public ModelSnapshot saveSnapshot() {
-        return new ModelSnapshot(this);
-    }
-
-    public void restoreSnapshot(ModelSnapshot snapshot) {
-        this.shapeList.clear();
-        for (MyShape shape : snapshot.getShapes()) {
-            this.shapeList.add(shape.clone());
-        }
-        if (!this.shapeList.isEmpty()) {
-            this.currentShape = this.shapeList.get(this.shapeList.size() - 1);
-        } else {
-            this.currentShape = null;
-        }
-        update();
-    }
-
-    @Getter
-    public static class ModelSnapshot {
-        private final List<MyShape> shapes;
-
-        public ModelSnapshot(Model model) {
-            this.shapes = new ArrayList<>();
-            for (MyShape shape : model.getShapeList()) {
-                this.shapes.add(shape.clone());
-            }
-        }
+    public MyShape pop() {
+        if (shapeList.isEmpty()) return null;
+        MyShape shape = shapeList.get(shapeList.size()-1);
+        shapeList.remove(shapeList.size()-1);
+        return shape;
     }
 
     public void changeShape(Point2D x, Point2D y) {
         this.currentShape.setFrame(x, y);
-        this.setChanged();
-        this.notifyObservers();
+        update();
     }
 
     public void draw(Graphics2D g) {
-        if (currentShape!=null) {
-            currentShape.draw(g);
-            shapeList.forEach(myShape -> myShape.draw(g));
-        }
+        shapeList.forEach(myShape -> myShape.draw(g));
     }
 
     public void addShape(MyShape shape) {
         currentShape = shape;
-        shapeList.add(currentShape);
+        shapeList.add(shape);
     }
 
     public void update() {
-        setChanged();
-        notifyObservers();
+        this.setChanged();
+        this.notifyObservers();
     }
 }

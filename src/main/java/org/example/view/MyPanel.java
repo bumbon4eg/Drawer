@@ -23,6 +23,11 @@ public class MyPanel extends JPanel implements Observer {
             public void mousePressed(MouseEvent arg0) {
                 controller.getPointOne(arg0.getPoint());
             }
+
+            @Override
+            public void mouseReleased(MouseEvent arg0) {
+                controller.released();
+            }
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -33,12 +38,6 @@ public class MyPanel extends JPanel implements Observer {
             }
         });
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent arg0) {
-                controller.getPointThree(arg0.getPoint());
-            }
-        });
     }
 
     @Override
